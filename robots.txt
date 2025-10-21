@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://akooa.netlify.app/sitemap.xml
