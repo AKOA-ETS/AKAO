@@ -923,7 +923,7 @@
             };
             
             // Envoyer l'email via EmailJS
-            emailjs.send('service_xsrxbyp', 'template_42awsqf', formData)
+            emailjs.send('service_qpvo3l9', 'template_4tzt9mb', formData)
                 .then(function(response) {
                     // Succès
                     submitBtn.textContent = 'Message envoyé !';
@@ -943,12 +943,28 @@
                     }, 3000);
                 })
                 .catch(function(error) {
-                    // Erreur
-                    console.error('Erreur:', error);
+                    // Erreur détaillée
+                    console.error('Erreur EmailJS:', error);
+                    console.log('Status:', error.status);
+                    console.log('Text:', error.text);
+                    
                     submitBtn.textContent = 'Erreur - Réessayer';
                     submitBtn.style.background = '#e74c3c';
                     
-                    alert('Erreur lors de l\'envoi du message. Veuillez réessayer ou nous contacter directement.');
+                    // Message d'erreur plus détaillé
+                    let errorMessage = 'Erreur lors de l\'envoi du message.\n\n';
+                    if (error.status === 400) {
+                        errorMessage += 'Erreur 400: Vérifiez vos clés EmailJS dans le dashboard.';
+                    } else if (error.status === 401) {
+                        errorMessage += 'Erreur 401: Clé publique invalide.';
+                    } else if (error.status === 404) {
+                        errorMessage += 'Erreur 404: Service ou template introuvable.';
+                    } else {
+                        errorMessage += `Erreur ${error.status}: ${error.text || 'Erreur inconnue'}`;
+                    }
+                    errorMessage += '\n\nVeuillez réessayer ou nous contacter directement.';
+                    
+                    alert(errorMessage);
                     
                     // Remettre le bouton normal après 3 secondes
                     setTimeout(() => {
