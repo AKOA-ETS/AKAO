@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact - Akoa Digital</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -710,7 +711,7 @@
             <h2 class="section-title">Parlons de Votre Projet</h2>
             <div class="contact-grid">
                 <div class="contact-form">
-                    <form id="contactForm" action="https://formspree.io/f/xpwnqkqr" method="POST">
+                    <form id="contactForm">
                         <div class="form-group">
                             <label for="name">Nom complet *</label>
                             <input type="text" id="name" name="name" required placeholder="Votre nom complet">
@@ -894,6 +895,70 @@
     </div>
 
     <script>
+        // Initialiser EmailJS
+        (function() {
+            emailjs.init("oUFK3_q8LRhygsCN8"); // Clé publique EmailJS Akoa Digital
+        })();
+
+        // Gestion du formulaire de contact
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.querySelector('.submit-btn');
+            const originalText = submitBtn.textContent;
+            
+            // Désactiver le bouton et changer le texte
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Envoi en cours...';
+            
+            // Récupérer les données du formulaire
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                company: document.getElementById('company').value,
+                service: document.getElementById('service').value,
+                budget: document.getElementById('budget').value,
+                message: document.getElementById('message').value
+            };
+            
+            // Envoyer l'email via EmailJS
+            emailjs.send('service_xsrxbyp', 'template_42awsqf', formData)
+                .then(function(response) {
+                    // Succès
+                    submitBtn.textContent = 'Message envoyé !';
+                    submitBtn.style.background = '#25D366';
+                    
+                    // Réinitialiser le formulaire
+                    document.getElementById('contactForm').reset();
+                    
+                    // Afficher un message de succès
+                    alert('Message envoyé avec succès ! Nous vous répondrons dans les plus brefs délais.');
+                    
+                    // Remettre le bouton normal après 3 secondes
+                    setTimeout(() => {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = originalText;
+                        submitBtn.style.background = '';
+                    }, 3000);
+                })
+                .catch(function(error) {
+                    // Erreur
+                    console.error('Erreur:', error);
+                    submitBtn.textContent = 'Erreur - Réessayer';
+                    submitBtn.style.background = '#e74c3c';
+                    
+                    alert('Erreur lors de l\'envoi du message. Veuillez réessayer ou nous contacter directement.');
+                    
+                    // Remettre le bouton normal après 3 secondes
+                    setTimeout(() => {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = originalText;
+                        submitBtn.style.background = '';
+                    }, 3000);
+                });
+        });
+
         // Mobile Menu Toggle
         const mobileMenuToggle = document.getElementById('mobileMenuToggle');
         const mobileNav = document.getElementById('mobileNav');
